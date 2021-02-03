@@ -44,8 +44,8 @@ public class Client
   
   /**
    * Main-Methode.
-   * @param args
-   * @throws Exception
+   * @param args Die Kommandozeilen-Parameter.
+   * @throws Exception Wenn es einen Fehler beim Aufbau der Verbindung gab.
    */
   public static void main(String[] args) throws Exception
   {

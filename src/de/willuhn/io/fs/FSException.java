@@ -28,7 +28,7 @@ public class FSException extends Exception
 
   /**
    * ct
-   * @param s
+   * @param s der Fehlertext.
    */
   public FSException(String s)
   {
@@ -37,8 +37,8 @@ public class FSException extends Exception
   
   /**
    * ct
-   * @param s
-   * @param cause
+   * @param s der Fehlertext.
+   * @param cause die ursaechliche Exception.
    */
   public FSException(String s, Throwable cause)
   {
@@ -47,7 +47,7 @@ public class FSException extends Exception
 
   /**
    * ct
-   * @param cause
+   * @param cause die ursaechliche Exception.
    */
   public FSException(Throwable cause)
   {

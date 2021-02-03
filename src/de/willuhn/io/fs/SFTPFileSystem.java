@@ -38,6 +38,7 @@ import de.willuhn.logging.Logger;
  *   <li>filesystems.sftp.private_key - Pfad zur Private-Key Datei id_rsa</li>
  *   <li>filesystems.sftp.passphrase - Password der Private-Key-Datei.</li>
  *   <li>filesystems.sftp.password - Passwort des Benutzers</li>
+ * </ul>
  */
 public class SFTPFileSystem extends AbstractFileSystem
 {

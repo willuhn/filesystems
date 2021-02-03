@@ -153,7 +153,7 @@ public class SMBFileSystem extends AbstractFileSystem
    * @param dir Pfad.
    * @param filter Filter.
    * @return Liste von Dateien oder Verzeichnissen.
-   * @throws FSException
+   * @throws FSException Wenn das Anzeigen fehlschlaegt.
    */
   public String[] _list(String dir, final Filter filter) throws FSException
   {

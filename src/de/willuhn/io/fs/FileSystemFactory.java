@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import de.willuhn.logging.Logger;
@@ -26,16 +27,18 @@ public class FileSystemFactory
 {
 
   // Hier halten wir die registrierten File-Systeme.
-  private static HashMap filesystems = new HashMap();
+  private static Map<String,Class<? extends FileSystem>> filesystems = new HashMap<String,Class<? extends FileSystem>>();
 
   static
   {
+    InputStream is = null;
+    
     try
     {
       ClassLoader loader = FileSystemFactory.class.getClassLoader();
 
       Logger.debug("loading filesystems.properties");
-      InputStream is = FileSystemFactory.class.getResourceAsStream("/filesystems.properties");
+      is = FileSystemFactory.class.getResourceAsStream("/filesystems.properties");
       Properties props = new Properties();
       props.load(is);
 
@@ -62,7 +65,14 @@ public class FileSystemFactory
         {
           String s = prot.trim().toLowerCase();
           Logger.debug("  " + s + " - implemented by " + clazz);
-          filesystems.put(s,loader.loadClass(clazz));
+          try
+          {
+            filesystems.put(s,(Class<FileSystem>)loader.loadClass(clazz));
+          }
+          catch (Throwable t)
+          {
+            Logger.error("unable to load filesystem class " + clazz,t);
+          }
         }
       }
     }
@@ -70,18 +80,32 @@ public class FileSystemFactory
     {
       Logger.error("unable to load filesystems",t);
     }
+    finally
+    {
+      if (is != null)
+      {
+        try
+        {
+          is.close();
+        }
+        catch (Exception e)
+        {
+          Logger.error("error while closing stream",e);
+        }
+      }
+    }
   }
 
   /**
    * Liefert eine File-System-Implementierung passend fuer die uebergebene URI.
-   * @param uri URI im Format <protocol>://[<username>:<password>@][<host>]/<dir>.
+   * @param uri URI im Format &lt;protocol&gt;://[&lt;username&gt;:&lt;password&gt;@][&lt;host&gt;]/&lt;dir&gt;.
    * Beispiele:
    * <ul>
    *   <li>ftp://user:password@servername/zielverzeichnis</li>
    *   <li>file:///zielverzeichnis</li>
    *   <li>smb://user:password@servername/zielverzeichnis</li>
    *   <li>jdbc:....... (Bsp.: jdbc:oracle:thin:scott/tiger@host:1521:DATABASE)</li>
-   *   <li>jms://<provider-url>?connectionfactory=<wert>&queue=<wert>&<jndi-param>=<wert>[&user=<user>&password=<password>]</li>
+   *   <li>jms://&lt;provider-url&gt;?connectionfactory=&lt;wert&gt;&amp;queue=&lt;wert&gt;&amp;&lt;jndi-param&gt;=&lt;wert&gt;[&amp;user=&lt;user&gt;&amp;password=&lt;password&gt;]</li>
    * </ul>
    * @return das entsprechende Filesystem.
    * @throws Exception Falls beim Erstellen des File-Systems ein Fehler auftrat oder
@@ -112,7 +136,7 @@ public class FileSystemFactory
       Logger.debug("protocoll: " + prot);
     }
 
-    Class c = (Class) filesystems.get(prot);
+    Class<? extends FileSystem> c = filesystems.get(prot);
     
     if (c == null)
     {
@@ -121,7 +145,7 @@ public class FileSystemFactory
       c = LocalFileSystem.class;
     }
       
-    FileSystem f = (FileSystem) c.newInstance();
+    FileSystem f = c.newInstance();
     f.init(new URI(uri));
     return f;
   }

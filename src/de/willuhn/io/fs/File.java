@@ -24,7 +24,7 @@ public interface File
   /**
    * Prueft, ob die Datei bereits existiert.
    * @return <code>true</code> wenn die Datei existiert, sonst <code>false</code>.
-   * @throws FSException
+   * @throws FSException Wenn das Pruefen der Existenz fehlschlug.
    */
   public boolean exists() throws FSException;
 
@@ -38,7 +38,7 @@ public interface File
   /**
    * Liefert die Groesse der Datei in Bytes.
    * @return Groesse der Datei in Bytes.
-   * @throws FSException
+   * @throws FSException Wenn das Ermitteln der Dateigroesse fehlschlug.
    */
   public long length() throws FSException;
   
@@ -46,7 +46,7 @@ public interface File
    * Liefert das Datum der letzten Aenderung der Datei als Millisekunden seit 1.1.1970.
    * @return UNIX-Timestamp (in Milli-Sekunden!) der letzten Aenderung.
    * @see java.io.File#lastModified()
-   * @throws FSException
+   * @throws FSException Wenn das Ermitteln des Aenderungsdatum fehlschlug.
    */
   public long lastModified() throws FSException;
   
@@ -55,21 +55,21 @@ public interface File
    * verwendet werden kann.
    * Existiert die Datei bereits, wird sie ueberschrieben.
    * @return ein Outputstream, dessen Ziel in die Datei muendet.
-   * @throws FSException
+   * @throws FSException Wenn das Erzeugen des Streams fehlschlug.
    */
   public OutputStream getOutputStream() throws FSException;
 
   /**
    * Liefert einen InputStream zum Lesen aus der Datei.
    * @return InpuStream, mit dem aus der Datei gelesen werden kann.
-   * @throws FSException
+   * @throws FSException Wenn das Erzeugen des Streams fehlschlug.
    */
   public InputStream getInputStream() throws FSException;
   
   /**
    * Benennt die Datei um.
    * @param name der neue Dateiname (ohne Pfadangabe).
-   * @throws FSException
+   * @throws FSException Wenn das Umbenennen fehlschlug.
    */
   public void rename(String name) throws FSException;
 }
