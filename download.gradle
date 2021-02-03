@@ -1,0 +1,26 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+compileJava.options.encoding = 'ISO-8859-1'
+
+eclipse {
+  classpath {
+    downloadSources = true
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'commons-net:commons-net:+'
+  compile 'jcifs:jcifs:+'
+  compile 'com.jcraft:jsch:+'
+}
+
+task download(type: Copy) {
+  into "lib/download"
+  from configurations.runtime
+}
